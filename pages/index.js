@@ -1,62 +1,50 @@
-import Head from 'next/head'
+import Head from 'next/head';
+import Link from 'next/link'; 
 
-export default function Home() {
+// API CREDENTIALS, WILL BE MOVED TO ENVIRONMENT VARIABLES in .env.local
+let client = require("contentful").createClient({
+  space: process.env.NEXT_CONTENTFUL_SPACE_ID,
+  accessToken: process.env.NEXT_CONTENTFUL_ACCESS_TOKEN,
+}); 
+
+// works while site is loading, returns props that we will use here 
+export async function getStaticProps() {
+  let data = await client.getEntries({ 
+    content_type: 'article' 
+  })
+  //getting all entries 
+  //as said in the content model's content type id 
+
+  return {
+    props: {
+      articles: data.items
+    }
+  }
+}
+
+export default function Home({articles}) {
   return (
     <div className="container">
       <Head>
-        <title>Create Next App</title>
+        <title>proceduralv4</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main>
-        <h1 className="title">
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className="description">
-          Get started by editing <code>pages/index.js</code>
-        </p>
-
-        <div className="grid">
-          <a href="https://nextjs.org/docs" className="card">
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className="card">
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className="card"
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="card"
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
+        <h1>procedural v4</h1>
+        <ul>
+          {articles.map((article) => (
+            <li key={article.sys.id}>
+              <Link href={'/articles/' + article.fields.slug}>
+              {article.fields.title}
+              </Link>
+            </li>
+          ))}
+        </ul>
       </main>
 
       <footer>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className="logo" />
-        </a>
+        <p>Made in Madrid</p>
       </footer>
 
       <style jsx>{`
