@@ -42,7 +42,7 @@ export async function getStaticProps({ params }) {
 
 // 
 export default function Article({ article }) {
-    if (!article) return <div>404</div>; 
+    if (!article) return <div>fuck you Wen</div>; 
 
     return(
         <div>
